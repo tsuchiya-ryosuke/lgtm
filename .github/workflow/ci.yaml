@@ -1,0 +1,40 @@
+# GitHub Actions 上で表示されるワークフロー名
+name: CI
+
+# このワークフローをいつ実行するか
+on:
+  # GitHub に push されたときに実行
+  push:
+
+  # Pull Request が作成・更新されたときに実行
+  pull_request:
+
+# 実行する処理のまとまり
+jobs:
+
+  # test という名前のジョブ
+  test:
+
+    # GitHub が用意する Ubuntu 環境上で実行
+    runs-on: ubuntu-latest
+
+    # 上から順番に実行する処理
+    steps:
+
+      # GitHub リポジトリのコードを
+      # CI 用の Ubuntu 環境に取得する
+      - uses: actions/checkout@v4
+
+      # Python を CI 環境にセットアップする
+      - uses: actions/setup-python@v5
+        with:
+          # 使用する Python のバージョン
+          python-version: '3.8.1'
+
+      # requirements.lock に書かれている
+      # Python ライブラリをインストールする
+      - run: pip install -r requirements.lock
+
+      # unittest を実行する
+      # -v は verbose の意味で、テスト結果を詳しく表示する
+      - run: python3 -m unittest -v
